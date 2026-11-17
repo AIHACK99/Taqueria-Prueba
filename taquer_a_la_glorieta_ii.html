@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taquería La Glorieta II | Tradición y Sabor desde 2007</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter & Fraunces para títulos con carácter tradicional -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Fraunces', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            red: '#B91C1C',      // Rojo intenso tradicional
+                            darkred: '#7F1D1D',  // Rojo oscuro
+                            gold: '#F59E0B',     // Dorado cálido
+                            amber: '#D97706',    // Ámbar
+                            brown: '#291D18',    // Café oscuro madera/carbón
+                            cream: '#FFFBEB',    // Crema cálido
+                            sand: '#FEF3C7',     // Arena suave
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Ocultar barra de desplazamiento en filtros horizontales móvil */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        /* Patrón sutil de fondo */
+        .bg-pattern {
+            background-color: #FFFBEB;
+            background-image: radial-gradient(#F59E0B 0.6px, transparent 0.6px), radial-gradient(#F59E0B 0.6px, #FFFBEB 0.6px);
+            background-size: 24px 24px;
+            background-position: 0 0, 12px 12px;
+            background-opacity: 0.15;
+        }
+    </style>
+</head>
+<body class="bg-brand-cream text-brand-brown font-sans antialiased selection:bg-brand-red selection:text-white">
+
+    <!-- ==================== BARRA DE NAVEGACIÓN FIJA ==================== -->
+    <header class="fixed top-0 left-0 right-0 z-40 bg-brand-brown/95 backdrop-blur-md text-brand-cream shadow-lg border-b border-brand-gold/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 sm:h-20">
+                
+                <!-- Logo / Nombre -->
+                <a href="#inicio" class="flex items-center gap-3 group">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-brand-red to-brand-darkred border-2 border-brand-gold flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
+                        <i class="fa-solid fa-fire-flame-curved text-brand-gold text-lg sm:text-xl"></i>
+                    </div>
+                    <div>
+                        <span class="font-display font-black text-lg sm:text-xl tracking-tight text-white block leading-none">
+                            LA GLORIETA <span class="text-brand-gold">II</span>
+                        </span>
+                        <span class="text-[11px] uppercase tracking-widest text-brand-gold/90 font-semibold">
+                            Taquería • Desde 2007
+                        </span>
+                    </div>
+                </a>
+
+                <!-- Enlaces Escritorio -->
+                <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
+                    <a href="#inicio" class="hover:text-brand-gold transition-colors py-2">Inicio</a>
+                    <a href="#menu" class="hover:text-brand-gold transition-colors py-2">Menú Completo</a>
+                    <a href="#por-kilos" class="hover:text-brand-gold transition-colors py-2">Por Kilos</a>
+                    <a href="#ubicacion" class="hover:text-brand-gold transition-colors py-2">Ubicación y Horarios</a>
+                </nav>
+
+                <!-- Botones Acción (Carrito + Menú Móvil) -->
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <button onclick="toggleCart()" class="relative flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-full text-sm font-semibold shadow-md transition-all active:scale-95">
+                        <i class="fa-brands fa-whatsapp text-lg"></i>
+                        <span class="hidden sm:inline">Mi Pedido</span>
+                        <span id="nav-cart-count" class="bg-brand-gold text-brand-brown font-bold text-xs px-2 py-0.5 rounded-full">
+                            0
+                        </span>
+                    </button>
+
+                    <!-- Botón Hamburguesa Móvil -->
+                    <button id="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Abrir menú" class="md:hidden p-2.5 rounded-xl text-brand-cream hover:bg-white/10 transition-colors">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menú Desplegable Móvil -->
+        <div id="mobile-menu" class="hidden md:hidden bg-brand-brown border-t border-brand-gold/20 px-4 pt-2 pb-5 space-y-2 shadow-2xl">
+            <a href="#inicio" onclick="toggleMobileMenu()" class="block px-4 py-3 rounded-xl hover:bg-white/10 font-medium">Inicio</a>
+            <a href="#menu" onclick="toggleMobileMenu()" class="block px-4 py-3 rounded-xl hover:bg-white/10 font-medium">Menú Completo</a>
+            <a href="#por-kilos" onclick="toggleMobileMenu()" class="block px-4 py-3 rounded-xl hover:bg-white/10 font-medium">Por Kilos y Especialidades</a>
+            <a href="#ubicacion" onclick="toggleMobileMenu()" class="block px-4 py-3 rounded-xl hover:bg-white/10 font-medium">Ubicación y Horarios</a>
+        </div>
+    </header>
+
+    <!-- ==================== SECCIÓN HERO ==================== -->
+    <section id="inicio" class="relative pt-24 pb-16 sm:pt-32 sm:pb-24 lg:pt-40 lg:pb-32 bg-brand-brown text-white overflow-hidden">
+        <!-- Fondo decorativo con gradiente cálido -->
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?auto=format&fit=crop&w=1920&q=80" 
+                 onerror="this.src='https://placehold.co/1920x1080/291D18/F59E0B?text=Taqueria+La+Glorieta+II'" 
+                 alt="Tacos al Pastor tradicionales" 
+                 class="w-full h-full object-cover opacity-35 scale-105">
+            <div class="absolute inset-0 bg-gradient-to-t from-brand-brown via-brand-brown/80 to-brand-darkred/60"></div>
+        </div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <!-- Insignia -->
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-gold/20 border border-brand-gold/40 text-brand-gold text-xs sm:text-sm font-semibold tracking-wide uppercase mb-6 backdrop-blur-sm">
+                <i class="fa-solid fa-award"></i>
+                <span>Auténtico Sabor Mexicano • Desde 2007</span>
+            </div>
+
+            <!-- Título Principal -->
+            <h1 class="font-display font-black text-4xl sm:text-6xl lg:text-7xl tracking-tight text-white mb-4 drop-shadow-md">
+                Taquería <span class="text-brand-gold">La Glorieta II</span>
+            </h1>
+
+            <!-- Subtítulo -->
+            <p class="text-lg sm:text-2xl text-brand-sand/90 font-medium max-w-2xl mx-auto mb-8 leading-relaxed">
+                Tradición y sabor desde 2007. Especialistas en Pastor, Chuleta, Tortas, Gringas, Nachos y órdenes por kilo recién salidas del trompo y la plancha.
+            </p>
+
+            <!-- Botones CTA -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="#menu" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-brand-red hover:bg-red-700 text-white font-bold text-base sm:text-lg shadow-xl shadow-brand-red/30 border border-red-500/40 transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-utensils"></i>
+                    <span>Ver Menú</span>
+                </a>
+                <button onclick="toggleCart()" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-brand-gold hover:bg-amber-400 text-brand-brown font-bold text-base sm:text-lg shadow-xl shadow-brand-gold/20 transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-whatsapp text-xl"></i>
+                    <span>Ordenar Ahora</span>
+                </button>
+            </div>
+
+            <!-- Tarjetas rápidas de confianza -->
+            <div class="grid grid-cols-3 gap-3 sm:gap-6 max-w-3xl mx-auto mt-12 pt-8 border-t border-white/15 text-center">
+                <div>
+                    <p class="font-display font-bold text-2xl sm:text-3xl text-brand-gold">+19 Años</p>
+                    <p class="text-xs sm:text-sm text-brand-sand/80">De tradición</p>
+                </div>
+                <div>
+                    <p class="font-display font-bold text-2xl sm:text-3xl text-brand-gold">100%</p>
+                    <p class="text-xs sm:text-sm text-brand-sand/80">Recién preparado</p>
+                </div>
+                <div>
+                    <p class="font-display font-bold text-2xl sm:text-3xl text-brand-gold">Por Kilo</p>
+                    <p class="text-xs sm:text-sm text-brand-sand/80">Ideal para compartir</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== SECCIÓN DESTACADA: POR KILOS ==================== -->
+    <section id="por-kilos" class="py-12 sm:py-16 bg-gradient-to-b from-brand-sand/60 to-brand-cream border-b border-brand-gold/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-10">
+                <span class="text-brand-red font-bold uppercase tracking-wider text-xs sm:text-sm">Para toda la familia o reuniones</span>
+                <h2 class="font-display font-black text-3xl sm:text-4xl text-brand-brown mt-1">Venta Por Kilos</h2>
+                <p class="text-brand-brown/75 mt-2 text-sm sm:text-base">Arma tu taquiza en casa con nuestra carne recién cortada y acompaña con tortillas calientitas.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Tarjeta Pastor por Kilo -->
+                <div class="bg-white rounded-3xl p-6 shadow-md border border-brand-gold/30 hover:shadow-xl transition-shadow flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-3 py-1 rounded-full bg-brand-red/10 text-brand-red font-bold text-xs uppercase">Especialidad</span>
+                            <i class="fa-solid fa-fire text-brand-red text-xl"></i>
+                        </div>
+                        <h3 class="font-display font-bold text-2xl text-brand-brown mb-4">Pastor por Kilo</h3>
+                        <ul class="space-y-3" id="kilos-pastor-list">
+                            <!-- Renderizado dinámico por JS -->
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Tarjeta Chuleta por Kilo -->
+                <div class="bg-white rounded-3xl p-6 shadow-md border border-brand-gold/30 hover:shadow-xl transition-shadow flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-3 py-1 rounded-full bg-brand-amber/15 text-brand-amber font-bold text-xs uppercase">A la plancha</span>
+                            <i class="fa-solid fa-bacon text-brand-amber text-xl"></i>
+                        </div>
+                        <h3 class="font-display font-bold text-2xl text-brand-brown mb-4">Chuleta por Kilo</h3>
+                        <ul class="space-y-3" id="kilos-chuleta-list">
+                            <!-- Renderizado dinámico por JS -->
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Tarjeta Orden de Tortillas -->
+                <div class="bg-brand-brown text-brand-cream rounded-3xl p-6 shadow-md border border-brand-gold/40 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-3 py-1 rounded-full bg-brand-gold/20 text-brand-gold font-bold text-xs uppercase">Complemento</span>
+                            <i class="fa-solid fa-layer-group text-brand-gold text-xl"></i>
+                        </div>
+                        <h3 class="font-display font-bold text-2xl text-white mb-2">Orden de Tortillas</h3>
+                        <p class="text-brand-sand/75 text-sm mb-6">El complemento indispensable para tus órdenes por kilo o quesos fundidos.</p>
+                        <ul class="space-y-3" id="kilos-tortillas-list">
+                            <!-- Renderizado dinámico por JS -->
+                        </ul>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-white/10 text-xs text-brand-gold/90 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-info"></i>
+                        <span>Incluye cilantro, cebolla, limones y salsas de la casa.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== MENÚ COMPLETO INTERACTIVO ==================== -->
+    <section id="menu" class="py-14 sm:py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- Encabezado Menú -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+                <div>
+                    <span class="text-brand-red font-bold uppercase tracking-wider text-xs sm:text-sm">Carta Oficial</span>
+                    <h2 class="font-display font-black text-3xl sm:text-5xl text-brand-brown mt-1">Nuestro Menú</h2>
+                </div>
+
+                <!-- Buscador rápido -->
+                <div class="relative w-full md:w-72">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-brown/40"></i>
+                    <input type="text" id="menu-search" onkeyup="filterMenu()" placeholder="Buscar platillo (ej. Gringa, Pastor)..." 
+                           class="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-white border border-brand-gold/40 focus:outline-none focus:ring-2 focus:ring-brand-red text-sm shadow-sm">
+                </div>
+            </div>
+
+            <!-- Pestañas / Filtros por Categoría -->
+            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-4 mb-8" id="category-tabs">
+                <!-- Generado dinámicamente -->
+            </div>
+
+            <!-- Contenedor de Categorías del Menú -->
+            <div id="menu-container" class="space-y-12">
+                <!-- Generado dinámicamente por JS -->
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ==================== UBICACIÓN Y HORARIOS ==================== -->
+    <section id="ubicacion" class="py-14 sm:py-20 bg-brand-sand/50 border-t border-brand-gold/25">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <span class="text-brand-red font-bold uppercase tracking-wider text-xs sm:text-sm">Visítanos o Pide a Domicilio</span>
+                <h2 class="font-display font-black text-3xl sm:text-4xl text-brand-brown mt-1">Ubicación y Horarios</h2>
+                <p class="text-brand-brown/75 mt-2 text-sm sm:text-base">Te esperamos con el trompo encendido y el mejor ambiente familiar.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+                <!-- Tarjeta Información y Horarios Editables -->
+                <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-md border border-brand-gold/30 flex flex-col justify-between space-y-6">
+                    <div>
+                        <div class="flex items-start gap-4 mb-6">
+                            <div class="w-12 h-12 rounded-2xl bg-brand-red/10 text-brand-red flex items-center justify-center shrink-0">
+                                <i class="fa-solid fa-location-dot text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-display font-bold text-xl text-brand-brown">Dirección del Local</h3>
+                                <p>
+                                    Av 22 186, entre 3j y Calle 3-K, Juan Pablo II, 97246 Mérida, Yuc.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-2xl bg-brand-gold/20 text-brand-amber flex items-center justify-center shrink-0">
+                                <i class="fa-solid fa-clock text-xl"></i>
+                            </div>
+                            <div class="w-full">
+                                <h3 class="font-display font-bold text-xl text-brand-brown mb-2">Horarios de Atención</h3>
+                                <div class="space-y-2 text-sm sm:text-base text-brand-brown/85 bg-brand-cream p-4 rounded-2xl border border-brand-gold/20" contenteditable="true">
+                                    <div class="flex justify-between border-b border-brand-gold/15 pb-1.5">
+                                        <span class="font-semibold">Lunes a Jueves:</span>
+                                        <span>6:00 PM – 12:30 AM</span>
+                                    </div>
+                                    <div class="flex justify-between border-b border-brand-gold/15 pb-1.5">
+                                        <span class="font-semibold">Viernes y Sábado:</span>
+                                        <span>6:00 PM – 2:00 AM</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="font-semibold">Domingo:</span>
+                                        <span>5:30 PM – 12:00 AM</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-brand-gold/20 flex flex-col sm:flex-row gap-3">
+                        <a href="https://maps.app.goo.gl/aCkENv6g8SASWpKu8" target="_blank" rel="noopener noreferrer" class="flex-1 py-3 px-4 rounded-2xl bg-brand-brown hover:bg-brand-brown/90 text-white font-semibold text-sm text-center transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-map-location-dot text-brand-gold"></i>
+                            <span>Abrir en Google Maps</span>
+                        </a>
+                        <button onclick="toggleCart()" class="flex-1 py-3 px-4 rounded-2xl bg-green-600 hover:bg-green-700 text-white font-semibold text-sm text-center transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-brands fa-whatsapp text-lg"></i>
+                            <span>Pedir por WhatsApp</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Mapa Integrado Estilizado -->
+                <div class="bg-white rounded-3xl p-3 shadow-md border border-brand-gold/30 min-h-[320px] flex flex-col">
+                    <div class="relative w-full h-full min-h-[300px] rounded-2xl overflow-hidden bg-brand-sand flex items-center justify-center">
+                        <iframe class="w-full h-full border-0" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3725.249626064865!2d-89.67696772523203!3d20.98262848936208!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8f5673c35bf70ca5%3A0x79c4c93b3bcada49!2sLA%20GLORIETA%20ll!5e0!3m2!1ses-419!2smx!4v1794952863994!5m2!1ses-419!2smx" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+                        <div class="absolute bottom-3 left-3 right-3 bg-brand-brown/90 backdrop-blur-md text-white px-4 py-2.5 rounded-xl text-xs flex items-center justify-between shadow-lg">
+                            <span class="font-semibold"><i class="fa-solid fa-utensils text-brand-gold mr-1.5"></i> Taquería La Glorieta II</span>
+                            <span class="text-brand-gold font-bold">Servicio en local y para llevar</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== PIE DE PÁGINA ==================== -->
+    <footer class="bg-brand-brown text-brand-cream/80 py-10 border-t border-brand-gold/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-brand-red border border-brand-gold flex items-center justify-center">
+                        <i class="fa-solid fa-fire-flame-curved text-brand-gold"></i>
+                    </div>
+                    <div>
+                        <p class="font-display font-bold text-white text-lg">Taquería La Glorieta II</p>
+                        <p class="text-xs text-brand-gold">Tradición y sabor desde 2007</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-6 text-sm">
+                    <a href="#inicio" class="hover:text-brand-gold transition-colors">Inicio</a>
+                    <a href="#menu" class="hover:text-brand-gold transition-colors">Menú</a>
+                    <a href="#por-kilos" class="hover:text-brand-gold transition-colors">Por Kilos</a>
+                    <a href="#ubicacion" class="hover:text-brand-gold transition-colors">Ubicación</a>
+                </div>
+
+                <p class="text-xs text-brand-cream/60 text-center md:text-right">
+                    © <span id="current-year"></span> Taquería La Glorieta II.<br>Todos los derechos reservados.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==================== BOTÓN FLOTANTE CARRITO MÓVIL ==================== -->
+    <button onclick="toggleCart()" id="floating-cart-btn" class="fixed bottom-5 right-5 z-30 bg-green-600 hover:bg-green-700 text-white px-5 py-3.5 rounded-full shadow-2xl flex items-center gap-3 transition-transform hover:scale-105 active:scale-95 border-2 border-white">
+        <i class="fa-brands fa-whatsapp text-2xl"></i>
+        <div class="text-left">
+            <span class="block text-[11px] uppercase font-bold leading-none opacity-90">Tu Pedido</span>
+            <span class="font-bold text-sm" id="floating-cart-total">$0 MXN</span>
+        </div>
+        <span id="floating-cart-badge" class="bg-brand-gold text-brand-brown font-black text-xs w-6 h-6 rounded-full flex items-center justify-center">0</span>
+    </button>
+
+    <!-- ==================== PANEL LATERAL CARRITO DE COMPRAS ==================== -->
+    <div id="cart-drawer" class="fixed inset-0 z-50 hidden">
+        <!-- Backdrop -->
+        <div onclick="toggleCart()" class="absolute inset-0 bg-black/60 backdrop-blur-xs transition-opacity"></div>
+        
+        <!-- Contenido del Carrito -->
+        <div class="absolute top-0 right-0 bottom-0 w-full max-w-md bg-brand-cream shadow-2xl flex flex-col justify-between border-l border-brand-gold/30">
+            
+            <!-- Header Carrito -->
+            <div class="p-5 bg-brand-brown text-white flex items-center justify-between border-b border-brand-gold/30">
+                <div class="flex items-center gap-2.5">
+                    <i class="fa-solid fa-bag-shopping text-brand-gold text-xl"></i>
+                    <div>
+                        <h3 class="font-display font-bold text-lg leading-tight">Tu Pedido</h3>
+                        <p class="text-xs text-brand-sand/80">Taquería La Glorieta II</p>
+                    </div>
+                </div>
+                <button onclick="toggleCart()" class="p-2 rounded-xl hover:bg-white/10 text-white transition-colors">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Lista de Productos en el Carrito -->
+            <div id="cart-items-container" class="flex-1 overflow-y-auto p-5 space-y-3">
+                <!-- Renderizado por JS -->
+            </div>
+
+            <!-- Footer Carrito y Formulario WhatsApp -->
+            <div class="p-5 bg-white border-t border-brand-gold/30 space-y-4">
+                <div>
+                    <label for="customer-name" class="block text-xs font-bold uppercase text-brand-brown/70 mb-1">Tu Nombre (Opcional)</label>
+                    <input type="text" id="customer-name" placeholder="Ej. Carlos Pérez" class="w-full px-3.5 py-2 rounded-xl bg-brand-cream border border-brand-gold/40 text-sm focus:outline-none focus:ring-2 focus:ring-brand-red">
+                </div>
+
+                <div>
+                    <label for="order-notes" class="block text-xs font-bold uppercase text-brand-brown/70 mb-1">Notas (Salsas, sin cebolla, etc.)</label>
+                    <input type="text" id="order-notes" placeholder="Ej. Con mucha salsa verde y limones" class="w-full px-3.5 py-2 rounded-xl bg-brand-cream border border-brand-gold/40 text-sm focus:outline-none focus:ring-2 focus:ring-brand-red">
+                </div>
+
+                <div class="flex items-center justify-between pt-2 border-t border-brand-gold/20">
+                    <span class="font-bold text-brand-brown">Total Estimado:</span>
+                    <span id="cart-total-price" class="font-display font-black text-2xl text-brand-red">$0 MXN</span>
+                </div>
+
+                <div class="flex gap-2">
+                    <button onclick="clearCart()" class="px-4 py-3 rounded-2xl bg-gray-200 hover:bg-gray-300 text-brand-brown font-semibold text-sm transition-colors" title="Vaciar carrito">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                    <button onclick="sendWhatsAppOrder()" class="flex-1 py-3.5 px-5 rounded-2xl bg-green-600 hover:bg-green-700 text-white font-bold text-sm sm:text-base shadow-lg flex items-center justify-center gap-2 transition-all active:scale-95">
+                        <i class="fa-brands fa-whatsapp text-xl"></i>
+                        <span>Enviar Pedido por WhatsApp</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== NOTIFICACIÓN TOAST (Sin usar alert) ==================== -->
+    <div id="toast-notification" class="fixed top-22 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 transition-all duration-300 transform -translate-y-4">
+        <div class="bg-brand-brown text-white px-5 py-3 rounded-full shadow-2xl border border-brand-gold flex items-center gap-2.5 text-sm font-medium">
+            <i class="fa-solid fa-circle-check text-brand-gold"></i>
+            <span id="toast-message">Producto agregado al pedido</span>
+        </div>
+    </div>
+
+    <!-- ==================== JAVASCRIPT: DATOS DEL MENÚ Y LÓGICA ==================== -->
+    <script>
+        // Establecer año actual
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // Base de datos exacta del menú de Taquería La Glorieta II
+        const menuData = [
+            {
+                id: 'tortas',
+                title: 'Tortas',
+                badge: 'Queso extra +$7',
+                icon: 'fa-burger',
+                allowExtraCheese: true,
+                extraCheesePrice: 7,
+                items: [
+                    { id: 'torta-1', name: 'Normal de Pastor', price: 35, desc: 'Telera crujiente con carne al pastor, cebolla, cilantro y salsa.' },
+                    { id: 'torta-2', name: 'Normal de Chuleta', price: 37, desc: 'Telera doradita con chuleta a la plancha recién picada.' },
+                    { id: 'torta-3', name: 'Especial de Pastor', price: 43, desc: 'Porción generosa de pastor con ingredientes especiales de la casa.' },
+                    { id: 'torta-4', name: 'Especial de Chuleta', price: 45, desc: 'Porción extra de chuleta a la plancha con toque especial.' }
+                ]
+            },
+            {
+                id: 'tortas-mixtas',
+                title: 'Tortas Mixtas',
+                badge: 'Combinaciones especiales',
+                icon: 'fa-layer-group',
+                allowExtraCheese: false,
+                items: [
+                    { id: 'tmixta-1', name: 'Torta Mixta Normal', price: 55, desc: 'Deliciosa combinación de nuestras carnes tradicionales.' },
+                    { id: 'tmixta-2', name: 'Torta Mixta Especial', price: 60, desc: 'La más completa de la casa, abundante y llena de sabor.' },
+                    { id: 'tmixta-3', name: 'Pastor c/ Champiñón (s/ queso)', price: 43, desc: 'Carne al pastor salteada con champiñones frescos sin queso.' },
+                    { id: 'tmixta-4', name: 'Pastor c/ Champiñón (c/ queso)', price: 50, desc: 'Carne al pastor con champiñones frescos y queso fundido.' }
+                ]
+            },
+            {
+                id: 'tacos',
+                title: 'Tacos',
+                badge: 'Queso extra +$7',
+                icon: 'fa-pepper-hot',
+                allowExtraCheese: true,
+                extraCheesePrice: 7,
+                items: [
+                    { id: 'taco-1', name: 'Taco Maíz de Pastor', price: 16, desc: 'Tortilla de maíz suave con auténtica carne al pastor.' },
+                    { id: 'taco-2', name: 'Taco Maíz de Chuleta', price: 18, desc: 'Tortilla de maíz con jugosa chuleta a la plancha.' },
+                    { id: 'taco-3', name: 'Taco Harina de Pastor', price: 19, desc: 'Tortilla de harina calientita con carne al pastor.' },
+                    { id: 'taco-4', name: 'Taco Harina de Chuleta', price: 21, desc: 'Tortilla de harina con chuleta a la plancha.' }
+                ]
+            },
+            {
+                id: 'frijoles',
+                title: 'Frijoles Charros',
+                badge: 'Receta tradicional',
+                icon: 'fa-bowl-food',
+                allowExtraCheese: false,
+                items: [
+                    { id: 'frijol-1', name: '1/2 Orden Especial', price: 60, desc: 'Media orden bien servida con carnes y condimentos tradicionales.' },
+                    { id: 'frijol-2', name: 'Orden Entera Especial', price: 90, desc: 'Orden completa preparada con todo el sabor especial de la casa.' },
+                    { id: 'frijol-3', name: 'Orden Entera Normal', price: 65, desc: 'Orden completa de frijoles charros calientitos.' }
+                ]
+            },
+            {
+                id: 'antojitos',
+                title: 'Antojitos',
+                badge: 'Gringas, Mestizas, Burros y más',
+                icon: 'fa-utensils',
+                allowExtraCheese: false,
+                items: [
+                    { id: 'ant-1', name: 'Gringa de Pastor', price: 25, desc: 'Tortilla de harina con queso fundido y carne al pastor.' },
+                    { id: 'ant-2', name: 'Gringa de Chuleta', price: 27, desc: 'Tortilla de harina con queso fundido y chuleta.' },
+                    { id: 'ant-3', name: 'Gringa c/ Champiñón', price: 30, desc: 'Con queso fundido, carne y champiñones salteados.' },
+                    { id: 'ant-4', name: 'Mestiza de Pastor', price: 35, desc: 'Doble sabor tradicional con queso y carne al pastor.' },
+                    { id: 'ant-5', name: 'Mestiza de Chuleta', price: 38, desc: 'Preparada con chuleta a la plancha y queso.' },
+                    { id: 'ant-6', name: 'Mestiza c/ Champiñón', price: 40, desc: 'Con champiñones frescos, carne y queso.' },
+                    { id: 'ant-7', name: 'Quesadilla', price: 19, desc: 'Tortilla doradita rellena de queso fundido.' },
+                    { id: 'ant-8', name: 'Quesadilla c/ Champiñón', price: 30, desc: 'Queso fundido con champiñones salteados.' },
+                    { id: 'ant-9', name: 'Guacamole', price: 75, desc: 'Orden fresca de guacamole preparado al momento.' },
+                    { id: 'ant-10', name: 'Burro de Pastor', price: 80, desc: 'Tortilla grande de harina rellena de pastor y guarniciones.' },
+                    { id: 'ant-11', name: 'Burro de Chuleta', price: 85, desc: 'Tortilla grande de harina rellena de chuleta a la plancha.' },
+                    { id: 'ant-12', name: 'Burro c/ Champiñón', price: 95, desc: 'Burro grande con carne, champiñones y queso.' },
+                    { id: 'ant-13', name: 'Burro Mixto', price: 105, desc: 'El burro más completo con combinación de carnes.' }
+                ]
+            },
+            {
+                id: 'nachos',
+                title: 'Nachos',
+                badge: '4 tamaños a elegir',
+                icon: 'fa-cheese',
+                isMatrix: true,
+                items: [
+                    {
+                        id: 'nacho-pastor',
+                        name: 'Nachos Al Pastor',
+                        desc: 'Totopos crujientes bañados en queso, frijoles y carne al pastor.',
+                        sizes: [
+                            { label: 'Individual', price: 80 },
+                            { label: 'Chico', price: 125 },
+                            { label: 'Mediano', price: 170 },
+                            { label: 'Grande', price: 200 }
+                        ]
+                    },
+                    {
+                        id: 'nacho-chuleta',
+                        name: 'Nachos Con Chuleta',
+                        desc: 'Totopos crujientes con queso fundido y chuleta a la plancha.',
+                        sizes: [
+                            { label: 'Individual', price: 85 },
+                            { label: 'Chico', price: 130 },
+                            { label: 'Mediano', price: 180 },
+                            { label: 'Grande', price: 210 }
+                        ]
+                    },
+                    {
+                        id: 'nacho-mixto',
+                        name: 'Nachos Mixto (Pastor, Chuleta y Champiñón)',
+                        desc: 'La combinación suprema con nuestras dos carnes y champiñones.',
+                        sizes: [
+                            { label: 'Individual', price: 90 },
+                            { label: 'Chico', price: 135 },
+                            { label: 'Mediano', price: 190 },
+                            { label: 'Grande', price: 230 }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'quesos',
+                title: 'Quesos Fundidos',
+                badge: 'Calientitos al momento',
+                icon: 'fa-fire-burner',
+                allowExtraCheese: false,
+                items: [
+                    { id: 'queso-1', name: 'Queso Fundido Natural', price: 85, desc: 'Cazuela de queso derretido listo para taquear.' },
+                    { id: 'queso-2', name: 'Queso Fundido Con Pastor', price: 90, desc: 'Queso fundido coronado con carne al pastor.' },
+                    { id: 'queso-3', name: 'Queso Fundido Con Champiñón', price: 105, desc: 'Queso fundido con champiñones salteados.' },
+                    { id: 'queso-4', name: 'Queso Fundido Pastor y Champiñón', price: 110, desc: 'Mezcla irresistible de pastor, champiñón y queso.' },
+                    { id: 'queso-5', name: 'Queso Fundido Con Chorizo', price: 85, desc: 'El clásico queso flameado con chorizo dorado.' },
+                    { id: 'queso-6', name: 'Queso Fundido Mixto', price: 125, desc: 'Especialidad de la casa con carnes variadas y queso.' }
+                ]
+            },
+            {
+                id: 'bebidas',
+                title: 'Bebidas',
+                badge: 'Bien frías',
+                icon: 'fa-bottle-water',
+                allowExtraCheese: false,
+                items: [
+                    { id: 'beb-1', name: 'Refrescos / Embotellados', price: 20, desc: 'Variedad de refrescos embotellados bien fríos.' },
+                    { id: 'beb-2', name: 'Aguas de Litro', price: 25, desc: 'Aguas frescas naturales del día (1 Litro).' }
+                ]
+            }
+        ];
+
+        // Datos específicos para la sección destacada "Por Kilos"
+        const kilosData = {
+            pastor: [
+                { id: 'kp-1', name: '1 Kilo de Pastor', price: 300 },
+                { id: 'kp-2', name: '3/4 Kilo de Pastor', price: 225 },
+                { id: 'kp-3', name: '1/2 Kilo de Pastor', price: 150 },
+                { id: 'kp-4', name: '1/4 Kilo de Pastor', price: 75 }
+            ],
+            chuleta: [
+                { id: 'kc-1', name: '1 Kilo de Chuleta', price: 320 },
+                { id: 'kc-2', name: '3/4 Kilo de Chuleta', price: 240 },
+                { id: 'kc-3', name: '1/2 Kilo de Chuleta', price: 160 },
+                { id: 'kc-4', name: '1/4 Kilo de Chuleta', price: 80 }
+            ],
+            tortillas: [
+                { id: 'kt-1', name: 'Orden de Tortillas de Maíz', price: 15 },
+                { id: 'kt-2', name: 'Orden de Tortillas de Harina', price: 18 }
+            ]
+        };
+
+        // Estado del carrito y filtro activo
+        let cart = [];
+        let activeCategory = 'all';
+
+        // ==================== RENDERIZADO SECCIÓN POR KILOS ====================
+        function renderKilosSection() {
+            const renderList = (items, containerId, isDark = false) => {
+                const container = document.getElementById(containerId);
+                container.innerHTML = items.map(item => `
+                    <li class="flex items-center justify-between p-2.5 rounded-2xl ${isDark ? 'bg-white/10 hover:bg-white/15' : 'bg-brand-cream hover:bg-brand-sand/60'} transition-colors">
+                        <div>
+                            <span class="font-semibold text-sm sm:text-base block ${isDark ? 'text-white' : 'text-brand-brown'}">${item.name}</span>
+                            <span class="font-bold text-sm ${isDark ? 'text-brand-gold' : 'text-brand-red'}">$${item.price} MXN</span>
+                        </div>
+                        <button onclick="addToCart('${item.id}', '${item.name}', ${item.price})" 
+                                class="px-3.5 py-2 rounded-xl ${isDark ? 'bg-brand-gold text-brand-brown hover:bg-amber-400' : 'bg-brand-red text-white hover:bg-red-700'} font-bold text-xs flex items-center gap-1.5 shadow-sm transition-transform active:scale-95">
+                            <i class="fa-solid fa-plus"></i> Agregar
+                        </button>
+                    </li>
+                `).join('');
+            };
+
+            renderList(kilosData.pastor, 'kilos-pastor-list');
+            renderList(kilosData.chuleta, 'kilos-chuleta-list');
+            renderList(kilosData.tortillas, 'kilos-tortillas-list', true);
+        }
+
+        // ==================== RENDERIZADO PESTAÑAS DE CATEGORÍA ====================
+        function renderCategoryTabs() {
+            const tabsContainer = document.getElementById('category-tabs');
+            const allTab = `
+                <button onclick="setCategory('all')" 
+                        class="px-5 py-2.5 rounded-full text-sm font-bold whitespace-nowrap transition-all ${activeCategory === 'all' ? 'bg-brand-red text-white shadow-md' : 'bg-white text-brand-brown hover:bg-brand-sand border border-brand-gold/30'}">
+                    Todos los Platillos
+                </button>
+            `;
+
+            const categoryTabs = menuData.map(cat => `
+                <button onclick="setCategory('${cat.id}')" 
+                        class="px-5 py-2.5 rounded-full text-sm font-bold whitespace-nowrap transition-all flex items-center gap-2 ${activeCategory === cat.id ? 'bg-brand-red text-white shadow-md' : 'bg-white text-brand-brown hover:bg-brand-sand border border-brand-gold/30'}">
+                    <i class="fa-solid ${cat.icon} text-xs"></i>
+                    <span>${cat.title}</span>
+                </button>
+            `).join('');
+
+            tabsContainer.innerHTML = allTab + categoryTabs;
+        }
+
+        function setCategory(catId) {
+            activeCategory = catId;
+            renderCategoryTabs();
+            filterMenu();
+        }
+
+        // ==================== RENDERIZADO DEL MENÚ COMPLETO ====================
+        function filterMenu() {
+            const searchTerm = document.getElementById('menu-search').value.toLowerCase().trim();
+            const menuContainer = document.getElementById('menu-container');
+
+            const filteredCategories = menuData
+                .filter(cat => activeCategory === 'all' || cat.id === activeCategory)
+                .map(cat => {
+                    const matchedItems = cat.items.filter(item => 
+                        item.name.toLowerCase().includes(searchTerm) || 
+                        item.desc.toLowerCase().includes(searchTerm) ||
+                        cat.title.toLowerCase().includes(searchTerm)
+                    );
+                    return { ...cat, items: matchedItems };
+                })
+                .filter(cat => cat.items.length > 0);
+
+            if (filteredCategories.length === 0) {
+                menuContainer.innerHTML = `
+                    <div class="text-center py-16 bg-white rounded-3xl border border-brand-gold/30">
+                        <i class="fa-solid fa-utensils text-4xl text-brand-gold mb-3"></i>
+                        <h3 class="font-display font-bold text-xl text-brand-brown">No encontramos ese platillo</h3>
+                        <p class="text-sm text-brand-brown/70 mt-1">Intenta buscar con otra palabra o selecciona "Todos los Platillos".</p>
+                    </div>
+                `;
+                return;
+            }
+
+            menuContainer.innerHTML = filteredCategories.map(cat => `
+                <div class="bg-white/80 backdrop-blur-xs rounded-3xl p-5 sm:p-8 shadow-sm border border-brand-gold/25">
+                    <!-- Encabezado de Categoría -->
+                    <div class="flex flex-wrap items-center justify-between gap-2 pb-4 mb-6 border-b-2 border-brand-gold/30">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-2xl bg-brand-red text-white flex items-center justify-center shadow-sm">
+                                <i class="fa-solid ${cat.icon}"></i>
+                            </div>
+                            <h3 class="font-display font-black text-2xl sm:text-3xl text-brand-brown">${cat.title}</h3>
+                        </div>
+                        <span class="px-3.5 py-1 rounded-full bg-brand-gold/20 text-brand-brown font-bold text-xs uppercase tracking-wide border border-brand-gold/40">
+                            ${cat.badge}
+                        </span>
+                    </div>
+
+                    <!-- Grid de Platillos -->
+                    ${cat.isMatrix ? renderNachosGrid(cat.items) : renderStandardGrid(cat)}
+                </div>
+            `).join('');
+        }
+
+        // Renderizado de tarjetas estándar (con soporte para Queso Extra en Tortas y Tacos)
+        function renderStandardGrid(cat) {
+            return `
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+                    ${cat.items.map(item => `
+                        <div class="bg-white rounded-2xl p-4 sm:p-5 border border-brand-gold/20 hover:border-brand-gold transition-all shadow-xs hover:shadow-md flex flex-col justify-between gap-4">
+                            <div class="flex justify-between items-start gap-3">
+                                <div>
+                                    <h4 class="font-bold text-base sm:text-lg text-brand-brown leading-snug">${item.name}</h4>
+                                    <p class="text-xs sm:text-sm text-brand-brown/70 mt-1">${item.desc}</p>
+                                </div>
+                                <span class="font-display font-black text-lg sm:text-xl text-brand-red shrink-0 bg-brand-cream px-3 py-1 rounded-xl border border-brand-gold/20">
+                                    $${item.price}
+                                </span>
+                            </div>
+
+                            <div class="flex flex-wrap items-center justify-end gap-2 pt-2 border-t border-gray-100">
+                                ${cat.allowExtraCheese ? `
+                                    <button onclick="addToCart('${item.id}-queso', '${item.name} (c/ Queso Extra)', ${item.price + cat.extraCheesePrice})" 
+                                            class="px-3 py-2 rounded-xl bg-brand-amber/15 hover:bg-brand-amber/25 text-brand-brown font-semibold text-xs transition-colors flex items-center gap-1.5">
+                                        <i class="fa-solid fa-cheese text-brand-amber"></i>
+                                        <span>+ Queso ($${item.price + cat.extraCheesePrice})</span>
+                                    </button>
+                                ` : ''}
+                                <button onclick="addToCart('${item.id}', '${item.name}', ${item.price})" 
+                                        class="px-4 py-2 rounded-xl bg-brand-red hover:bg-red-700 text-white font-bold text-xs sm:text-sm transition-all active:scale-95 flex items-center gap-1.5 shadow-xs">
+                                    <i class="fa-solid fa-plus"></i>
+                                    <span>Agregar</span>
+                                </button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // Renderizado especial para Nachos (4 tamaños por platillo)
+        function renderNachosGrid(items) {
+            return `
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+                    ${items.map(item => `
+                        <div class="bg-white rounded-2xl p-5 border border-brand-gold/25 shadow-xs flex flex-col justify-between">
+                            <div>
+                                <h4 class="font-bold text-lg text-brand-brown">${item.name}</h4>
+                                <p class="text-xs text-brand-brown/70 mt-1 mb-4">${item.desc}</p>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                ${item.sizes.map(size => `
+                                    <button onclick="addToCart('${item.id}-${size.label}', '${item.name} - ${size.label}', ${size.price})"
+                                            class="p-2.5 rounded-xl bg-brand-cream hover:bg-brand-red hover:text-white border border-brand-gold/30 transition-all text-left group flex items-center justify-between">
+                                        <div>
+                                            <span class="block text-[11px] font-bold uppercase opacity-75">${size.label}</span>
+                                            <span class="font-display font-black text-sm text-brand-red group-hover:text-white">$${size.price}</span>
+                                        </div>
+                                        <i class="fa-solid fa-plus text-xs opacity-60 group-hover:opacity-100"></i>
+                                    </button>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // ==================== LÓGICA DEL CARRITO DE COMPRAS ====================
+        function addToCart(id, name, price) {
+            const existingIndex = cart.findIndex(item => item.id === id);
+            if (existingIndex > -1) {
+                cart[existingIndex].qty += 1;
+            } else {
+                cart.push({ id, name, price, qty: 1 });
+            }
+            updateCartUI();
+            showToast(`Agregado: ${name}`);
+        }
+
+        function updateItemQty(index, delta) {
+            cart[index].qty += delta;
+            if (cart[index].qty <= 0) {
+                cart.splice(index, 1);
+            }
+            updateCartUI();
+        }
+
+        function clearCart() {
+            cart = [];
+            updateCartUI();
+            showToast('Pedido vaciado');
+        }
+
+        function updateCartUI() {
+            const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+            // Actualizar contadores
+            document.getElementById('nav-cart-count').textContent = totalItems;
+            document.getElementById('floating-cart-badge').textContent = totalItems;
+            document.getElementById('floating-cart-total').textContent = `$${totalPrice} MXN`;
+            document.getElementById('cart-total-price').textContent = `$${totalPrice} MXN`;
+
+            // Renderizar lista dentro del drawer
+            const container = document.getElementById('cart-items-container');
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="h-full flex flex-col items-center justify-center text-center py-12 text-brand-brown/50">
+                        <i class="fa-solid fa-basket-shopping text-5xl mb-3 text-brand-gold/50"></i>
+                        <p class="font-bold text-base text-brand-brown">Tu pedido está vacío</p>
+                        <p class="text-xs mt-1 max-w-xs">Explora nuestro menú y agrega tacos, tortas, gringas o carne por kilo para armar tu orden.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = cart.map((item, idx) => `
+                <div class="bg-white p-3.5 rounded-2xl border border-brand-gold/25 flex items-center justify-between gap-3 shadow-2xs">
+                    <div class="flex-1">
+                        <h5 class="font-bold text-sm text-brand-brown leading-tight">${item.name}</h5>
+                        <span class="text-xs font-semibold text-brand-red">$${item.price} c/u • Subtotal: $${item.price * item.qty}</span>
+                    </div>
+                    <div class="flex items-center gap-2 bg-brand-cream rounded-xl p-1 border border-brand-gold/20">
+                        <button onclick="updateItemQty(${idx}, -1)" class="w-7 h-7 rounded-lg bg-white hover:bg-gray-100 text-brand-brown font-bold flex items-center justify-center shadow-2xs">
+                            -
+                        </button>
+                        <span class="font-bold text-sm w-5 text-center">${item.qty}</span>
+                        <button onclick="updateItemQty(${idx}, 1)" class="w-7 h-7 rounded-lg bg-brand-red text-white hover:bg-red-700 font-bold flex items-center justify-center shadow-2xs">
+                            +
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ==================== ENVIAR PEDIDO POR WHATSAPP ====================
+        function sendWhatsAppOrder() {
+            if (cart.length === 0) {
+                showToast('Agrega al menos un platillo antes de enviar');
+                return;
+            }
+
+            const customerName = document.getElementById('customer-name').value.trim();
+            const orderNotes = document.getElementById('order-notes').value.trim();
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+            let message = `¡Hola *Taquería La Glorieta II*! 🌮🔥 Me gustaría hacer el siguiente pedido:\n\n`;
+            
+            if (customerName) {
+                message += `👤 *Cliente:* ${customerName}\n\n`;
+            }
+
+            message += `📋 *Detalle del Pedido:*\n`;
+            cart.forEach(item => {
+                message += `• ${item.qty}x ${item.name} — $${item.price * item.qty}\n`;
+            });
+
+            message += `\n💰 *Total Estimado:* $${totalPrice} MXN`;
+
+            if (orderNotes) {
+                message += `\n📝 *Notas:* ${orderNotes}`;
+            }
+
+            message += `\n\n¡Muchas gracias!`;
+
+            // Número de WhatsApp simulado (puedes reemplazar 5219990000000 por el número real del negocio)
+            const phoneNumber = '529994534987';
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+            
+            window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+        }
+
+        // ==================== CONTROLES UI (MENÚ MÓVIL, DRAWER, TOAST) ====================
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        function toggleCart() {
+            const drawer = document.getElementById('cart-drawer');
+            drawer.classList.toggle('hidden');
+        }
+
+        let toastTimeout;
+        function showToast(msg) {
+            const toast = document.getElementById('toast-notification');
+            const toastMsg = document.getElementById('toast-message');
+            toastMsg.textContent = msg;
+
+            toast.classList.remove('opacity-0', '-translate-y-4');
+            toast.classList.add('opacity-100', 'translate-y-0');
+
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', '-translate-y-4');
+            }, 2200);
+        }
+
+        // Inicialización al cargar la página
+        window.addEventListener('DOMContentLoaded', () => {
+            renderKilosSection();
+            renderCategoryTabs();
+            filterMenu();
+            updateCartUI();
+        });
+    </script>
+</body>
+</html>
